@@ -1,0 +1,14 @@
+*{
+  margin:0;
+  border:0;
+  padding:0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: rgb(255, 231, 97);
+  color: white;
+  text-align: center;
+}
