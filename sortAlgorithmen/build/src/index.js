@@ -1,0 +1,24 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var sorter_1 = require("./sorter");
+var NumbersCollection_1 = require("./NumbersCollection");
+var CharactersCollection_1 = require("./CharactersCollection");
+var LinkedList_1 = require("./LinkedList");
+//prettier-ignore
+var numbersCollection = new NumbersCollection_1.NumbersCollection([94, 3, -4, 2, 55, -100, 44, 32, 44, 44, 45, 500]);
+var sorter = new sorter_1.Sorter(numbersCollection);
+sorter.bubbleSort();
+console.log(numbersCollection.data);
+var charactersCollection = new CharactersCollection_1.CharactersCollection("zXdddkssdeedhH");
+var sorter2 = new sorter_1.Sorter(charactersCollection);
+sorter2.bubbleSort();
+console.log(charactersCollection.data);
+var linkedList = new LinkedList_1.LinkedList();
+linkedList.add(500);
+linkedList.add(5);
+linkedList.add(-4);
+linkedList.add(4);
+linkedList.add(99);
+var sorter3 = new sorter_1.Sorter(linkedList);
+sorter3.bubbleSort();
+console.log(linkedList.print());

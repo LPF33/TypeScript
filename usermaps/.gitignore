@@ -1,0 +1,4 @@
+/node_modules
+mapbox-token.js
+/dist
+/.cache
