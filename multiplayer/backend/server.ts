@@ -39,6 +39,10 @@ io.on("connection", (socket): void => {
     socket.on("draw-car", (data): void => {
         socket.to(room).emit("draw-car", data);
     });
+
+    socket.on("track-finished", (data): void => {
+        io.to(room).emit("race-finished");
+    });
 });
 
 server.listen(process.env.Port || 8080);

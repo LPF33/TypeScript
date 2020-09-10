@@ -53,8 +53,8 @@ export const levelThree: number[] = [
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 ];
 
-export const track_Road = 0;
-export const track_Wall = 1;
-export const track_Car = 2;
-export const track_Start = 3;
-export const track_Grass = 4;
+export const track_Road: number = 0;
+export const track_Wall: number = 1;
+export const track_Car: number = 2;
+export const track_Start: number = 3;
+export const track_Grass: number = 4;

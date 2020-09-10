@@ -1,70 +1,71 @@
 import * as React from "react";
-import { useHistory, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { RouteComponentProps } from "react-router";
-import { socket, connect } from "../Socket/socket";
+import { useMultiPlayerConnection } from "../CustomHooks/MultiPlayerConnection";
+import { socket } from "../Socket/socket";
 import MiniRacerGame from "../Games/MiniRacer/MiniRacer";
+
+const Wrapper = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: ${(props) => (props.theme === true ? "black" : "white")};
+`;
+
+const Loading = styled.h1`
+    font-family: "Grandstander", cursive;
+    font-size: 3em;
+    color: red;
+`;
+
+const Wait = styled.h1`
+    font-family: "Grandstander", cursive;
+    font-size: 3em;
+`;
+
+const Exit = styled(Link)`
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    font-family: "Grandstander", cursive;
+    font-size: 1em;
+    border: 1px solid ${(props) => (props.theme === true ? "white" : "black")};
+    text-decoration: none;
+    padding: 2px;
+    color: ${(props) => (props.theme === true ? "white" : "black")};
+`;
 
 type TParams = { room: string };
 
-enum Events {
-    Connect = "connect",
-    Disconnect = "disconnect",
-    Leave = "leave-room",
-    UserLeft = "user-leave",
-    PlayerNumber = "player-number",
-    StartGame = "start-game",
-}
-
 const MiniRacer: React.FC<RouteComponentProps<TParams>> = ({ match }) => {
     const { room } = match.params;
-    const history = useHistory();
+
     const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
 
-    const [connected, setConnected] = React.useState<boolean>(false);
-    const [complete, setComplete] = React.useState<boolean>(false);
-    const playerNumber = React.useRef<number>(0);
-
-    const game = (num: number) => {
+    const game = (num: number): void => {
         const gameCanvas = canvasRef.current;
         MiniRacerGame(gameCanvas, socket, num);
     };
 
-    React.useEffect(() => {
-        connect(room);
-
-        socket.on(Events.Connect, (): void => {
-            setConnected(true);
-        });
-
-        socket.on(Events.Disconnect, (): void => {
-            history.replace("/");
-        });
-
-        socket.on(Events.UserLeft, (): void => {
-            setComplete(false);
-        });
-
-        socket.on(Events.PlayerNumber, (data: number): void => {
-            playerNumber.current = data;
-        });
-
-        socket.on(Events.StartGame, (): void => {
-            setComplete(true);
-            game(playerNumber.current);
-        });
-
-        return () => socket.emit(Events.Leave);
-    }, []);
+    const { complete, connected } = useMultiPlayerConnection(room, game);
 
     return (
-        <div>
-            {!connected && <div>not connected</div>}
-            {connected && !complete && <div>Waiting for second player</div>}
+        <Wrapper theme={complete}>
+            {!connected && <Loading>Not connected! Wait!</Loading>}
+            {connected && !complete && (
+                <Wait>Waiting for second player...</Wait>
+            )}
             {connected && complete && (
                 <canvas ref={canvasRef} width="800" height="600"></canvas>
             )}
-            <Link to="/">Exit</Link>
-        </div>
+            <Exit to="/" theme={complete}>
+                Exit
+            </Exit>
+        </Wrapper>
     );
 };
 

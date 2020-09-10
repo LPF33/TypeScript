@@ -58,5 +58,8 @@ io.on("connection", function (socket) {
     socket.on("draw-car", function (data) {
         socket.to(room).emit("draw-car", data);
     });
+    socket.on("track-finished", function (data) {
+        io.to(room).emit("race-finished");
+    });
 });
 server.listen(process.env.Port || 8080);
