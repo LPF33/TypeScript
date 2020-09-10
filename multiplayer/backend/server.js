@@ -55,6 +55,9 @@ io.on("connection", function (socket) {
         socket.leave(room);
         io.to(room).emit("user-leave");
     });
+    socket.on("ready-to-play", function () {
+        io.to(room).emit("ready-to-play");
+    });
     socket.on("draw-car", function (data) {
         socket.to(room).emit("draw-car", data);
     });

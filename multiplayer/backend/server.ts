@@ -36,6 +36,10 @@ io.on("connection", (socket): void => {
         io.to(room).emit("user-leave");
     });
 
+    socket.on("ready-to-play", (): void => {
+        io.to(room).emit("ready-to-play");
+    });
+
     socket.on("draw-car", (data): void => {
         socket.to(room).emit("draw-car", data);
     });
