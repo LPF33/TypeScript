@@ -12,6 +12,8 @@ enum GameState {
     start = "game-start",
     play = "while-playing",
     end = "game-over",
+    level = "next-level",
+    wait = "wait-a-second",
 }
 
 enum Direction {
@@ -24,74 +26,14 @@ interface KeyBool {
     ArrowRight: boolean;
 }
 
-class Ship extends Graphics {
-    private ctx: CanvasRenderingContext2D;
-    private canvasWidth: number;
-    private canvasHeight: number;
-    private shipX: number;
-    private shipY: number;
-    private shipWidth: number = 40;
-    private shipHeight: number = 15;
-    private shipSpeed: number = 2.5;
-    private rocketX: number = 0;
-    private rocketY: number = 0;
-    private rocketDia: number = 10;
-    private lives: number = 3;
+interface Rocket {
+    x: number;
+    y: number;
+}
 
-    constructor(ctx: CanvasRenderingContext2D, x: number, y: number) {
-        super();
-        this.ctx = ctx;
-        this.canvasWidth = x;
-        this.canvasHeight = y;
-        this.shipX = x / 2 - this.shipWidth / 2;
-        this.shipY = y - this.shipHeight - 10;
-    }
-
-    draw(moved: KeyBool) {
-        this.move(moved);
-        super.colorRect(
-            this.ctx,
-            this.shipX,
-            this.shipY,
-            this.shipWidth,
-            this.shipHeight,
-            "yellow"
-        );
-        this.rocket();
-        super.colorCirlce(
-            this.ctx,
-            this.rocketX,
-            this.rocketY,
-            this.rocketDia,
-            "blue"
-        );
-    }
-
-    move(moved: KeyBool) {
-        if (moved.ArrowLeft) {
-            this.shipX = this.shipX <= 0 ? 0 : this.shipX - this.shipSpeed;
-        } else if (moved.ArrowRight) {
-            this.shipX =
-                this.shipX + this.shipWidth >= this.canvasWidth
-                    ? this.canvasWidth - this.shipWidth
-                    : this.shipX + this.shipSpeed;
-        }
-    }
-
-    rocket() {
-        this.rocketX = this.shipX;
-        this.rocketY += 15;
-    }
-
-    mousePosition(x: number) {
-        if (x < this.shipX) {
-            return Direction.left;
-        } else if (x >= this.shipX && x <= this.shipX + this.shipWidth) {
-            return "";
-        } else {
-            return Direction.right;
-        }
-    }
+interface Speed {
+    x: number;
+    y: number;
 }
 
 class Game extends Graphics {
@@ -102,7 +44,12 @@ class Game extends Graphics {
     private state: GameState;
     private animationID: number = 0;
     private ship: Ship;
+    private invaders: Invaders;
+    private points: number = 0;
+    private savedPoints: number = 0;
     private keyPressed: KeyBool = { ArrowLeft: false, ArrowRight: false };
+    private level: number = 1;
+    private winStatus: boolean = false;
 
     constructor(canvasElement: CanvasVar, state: GameState) {
         super();
@@ -111,32 +58,47 @@ class Game extends Graphics {
         this.width = canvasElement.width;
         this.height = canvasElement.height;
         this.state = state;
-        this.ship = new Ship(this.ctx, this.width, this.height);
+        this.invaders = new Invaders(
+            this.ctx,
+            this.width,
+            this.height,
+            this.level
+        );
+        this.ship = new Ship(
+            this.ctx,
+            this.width,
+            this.height,
+            this.invaders.bombsDia
+        );
     }
 
     startScreen(): void {
         this.clearCanvas();
-        this.ctx.font = "30px Arial";
-        this.ctx.fillStyle = "white";
-        this.ctx.textBaseline = "middle";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText("Space Invaders", this.width / 2, this.height / 2);
-        this.ctx.font = "20px Arial";
-        this.ctx.fillText(
-            "Click or press a Key to start",
+        super.drawText(
+            this.ctx,
+            "Space Invaders",
             this.width / 2,
-            this.height / 2 + 40
+            this.height / 2,
+            30
+        );
+        super.drawText(
+            this.ctx,
+            "Click or press a key to start",
+            this.width / 2,
+            this.height / 2 + 40,
+            20
         );
     }
 
     countdown(seconds: number = 3): void {
         this.clearCanvas();
-        this.ctx.font = "40px Arial";
-        this.ctx.fillStyle = "white";
-        this.ctx.textBaseline = "middle";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText(String(seconds), this.width / 2, this.height / 2);
-
+        super.drawText(
+            this.ctx,
+            String(seconds),
+            this.width / 2,
+            this.height / 2,
+            40
+        );
         if (seconds > 0) {
             setTimeout(() => this.countdown(--seconds), 1000);
         } else {
@@ -146,15 +108,106 @@ class Game extends Graphics {
 
     playGame(): void {
         this.clearCanvas();
-        this.ship.draw(this.keyPressed);
-        this.animationID = window.requestAnimationFrame(() => this.playGame());
+        this.ship.draw(
+            this.keyPressed,
+            this.invaders.collision.bind(this.invaders)
+        );
+        this.invaders.draw(this.ship.collision.bind(this.ship));
+        this.showPoints();
+        if (this.gameStatus()) {
+            this.state = GameState.wait;
+            this.endGame();
+        } else {
+            this.animationID = window.requestAnimationFrame(() =>
+                this.playGame()
+            );
+        }
+    }
+
+    showPoints() {
+        this.points =
+            this.savedPoints +
+            (this.invaders.allInvaders - this.invaders.invadersCount) *
+                (10 * this.level);
+        super.drawText(
+            this.ctx,
+            `Level: ${this.level} Points: ${this.points} Lives: ${this.ship.lives}`,
+            10,
+            10,
+            10,
+            "start"
+        );
+    }
+
+    gameStatus(): boolean {
+        if (this.ship.lives <= 0 || this.invaders.win >= 3) {
+            this.winStatus = false;
+            return true;
+        } else if (this.invaders.invadersCount === 0) {
+            this.winStatus = true;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    endGame(): void {
+        let text: string;
+        let text2: string;
+        let text3: string;
+        if (this.winStatus) {
+            text = "You are a hero!";
+            text2 = `Points: ${this.points} Level: ${this.level}`;
+            text3 = "Click or press a key to start next level!";
+            setTimeout(() => (this.state = GameState.level), 1000);
+        } else {
+            text = "The Invaders take the World! It's over!";
+            text2 = `You lost in level ${this.level}! Points: ${this.points}`;
+            text3 = "Click or press a key to restart";
+            setTimeout(() => (this.state = GameState.end), 1000);
+        }
+        this.clearCanvas();
+        super.drawText(this.ctx, text, this.width / 2, this.height / 2, 30);
+        super.drawText(
+            this.ctx,
+            text2,
+            this.width / 2,
+            this.height / 2 + 40,
+            20,
+            "center",
+            "yellow"
+        );
+        super.drawText(
+            this.ctx,
+            text3,
+            this.width / 2,
+            this.height / 2 + 80,
+            20
+        );
+    }
+
+    levelUp() {
+        this.savedPoints = this.points;
+        this.level++;
+        this.invaders.reset(this.level);
+        this.ship.reset();
+        this.state = GameState.play;
+        this.countdown();
+    }
+
+    endReset() {
+        this.savedPoints = 0;
+        this.level = 1;
+        this.invaders.reset(1);
+        this.ship.reset();
+        this.state = GameState.play;
+        this.countdown();
     }
 
     keyDown(e: KeyboardEvent): void {
         if (this.state === GameState.start) {
             this.state = GameState.play;
-            //this.countdown();
-            this.playGame();
+            this.countdown();
         } else if (this.state === GameState.play) {
             e.preventDefault();
             if (e.key === Direction.left) {
@@ -162,8 +215,12 @@ class Game extends Graphics {
             } else if (e.key === Direction.right) {
                 this.keyPressed.ArrowRight = true;
             } else if (e.keyCode === 32 || e.key === " ") {
-                this.ship.rocket();
+                this.ship.fireRocket();
             }
+        } else if (this.state === GameState.end) {
+            this.endReset();
+        } else if (this.state === GameState.level) {
+            this.levelUp();
         }
     }
 
@@ -177,15 +234,17 @@ class Game extends Graphics {
         }
     }
 
-    touch(e: TouchEvent) {
+    touch(e: TouchEvent): void {
+        e.preventDefault();
         this.pointer(e.touches[0].pageX);
     }
 
-    mouse(e: MouseEvent) {
+    mouse(e: MouseEvent): void {
+        e.preventDefault();
         this.pointer(e.clientX);
     }
 
-    pointer(posX: number) {
+    pointer(posX: number): void {
         const rect = this.canvas.getBoundingClientRect();
         const root = document.documentElement;
         const mouseX = posX - rect.left - root.scrollLeft;
@@ -202,7 +261,21 @@ class Game extends Graphics {
         }
     }
 
-    clearCanvas() {
+    pointerClick(e: MouseEvent | TouchEvent) {
+        e.preventDefault();
+        if (this.state === GameState.start) {
+            this.state = GameState.play;
+            this.countdown();
+        } else if (this.state === GameState.play) {
+            this.ship.fireRocket();
+        } else if (this.state === GameState.end) {
+            this.endReset();
+        } else if (this.state === GameState.level) {
+            this.levelUp();
+        }
+    }
+
+    clearCanvas(): void {
         super.colorRect(
             this.ctx,
             0,
@@ -222,3 +295,5 @@ window.addEventListener("keydown", game.keyDown.bind(game));
 window.addEventListener("keyup", game.keyUp.bind(game));
 window.addEventListener("mousemove", game.mouse.bind(game));
 window.addEventListener("touchmove", game.touch.bind(game));
+window.addEventListener("click", game.pointerClick.bind(game));
+window.addEventListener("touchstart", game.pointerClick.bind(game));

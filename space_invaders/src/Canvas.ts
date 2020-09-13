@@ -10,7 +10,6 @@ class Canvas {
 
     constructor() {
         this.setCanvasSize();
-        window.addEventListener("resize", this.setCanvasSize.bind(this));
     }
 
     setCanvasSize(): void {

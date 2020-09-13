@@ -6,7 +6,6 @@ var Canvas = /** @class */ (function () {
         this.width = 0;
         this.height = 0;
         this.setCanvasSize();
-        window.addEventListener("resize", this.setCanvasSize.bind(this));
     }
     Canvas.prototype.setCanvasSize = function () {
         this.canvas.width = window.innerWidth >= 600 ? 600 : window.innerWidth;

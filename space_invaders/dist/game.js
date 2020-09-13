@@ -19,97 +19,43 @@ var GameState;
     GameState["start"] = "game-start";
     GameState["play"] = "while-playing";
     GameState["end"] = "game-over";
+    GameState["level"] = "next-level";
+    GameState["wait"] = "wait-a-second";
 })(GameState || (GameState = {}));
 var Direction;
 (function (Direction) {
     Direction["left"] = "ArrowLeft";
     Direction["right"] = "ArrowRight";
 })(Direction || (Direction = {}));
-var Ship = /** @class */ (function (_super) {
-    __extends(Ship, _super);
-    function Ship(ctx, x, y) {
-        var _this = _super.call(this) || this;
-        _this.shipWidth = 40;
-        _this.shipHeight = 15;
-        _this.shipSpeed = 2.5;
-        _this.rocketX = 0;
-        _this.rocketY = 0;
-        _this.rocketDia = 10;
-        _this.lives = 3;
-        _this.ctx = ctx;
-        _this.canvasWidth = x;
-        _this.canvasHeight = y;
-        _this.shipX = x / 2 - _this.shipWidth / 2;
-        _this.shipY = y - _this.shipHeight - 10;
-        return _this;
-    }
-    Ship.prototype.draw = function (moved) {
-        this.move(moved);
-        _super.prototype.colorRect.call(this, this.ctx, this.shipX, this.shipY, this.shipWidth, this.shipHeight, "yellow");
-        this.rocket();
-        _super.prototype.colorCirlce.call(this, this.ctx, this.rocketX, this.rocketY, this.rocketDia, "blue");
-    };
-    Ship.prototype.move = function (moved) {
-        if (moved.ArrowLeft) {
-            this.shipX = this.shipX <= 0 ? 0 : this.shipX - this.shipSpeed;
-        }
-        else if (moved.ArrowRight) {
-            this.shipX =
-                this.shipX + this.shipWidth >= this.canvasWidth
-                    ? this.canvasWidth - this.shipWidth
-                    : this.shipX + this.shipSpeed;
-        }
-    };
-    Ship.prototype.rocket = function () {
-        this.rocketX = this.shipX;
-        this.rocketY += 15;
-    };
-    Ship.prototype.mousePosition = function (x) {
-        if (x < this.shipX) {
-            return Direction.left;
-        }
-        else if (x >= this.shipX && x <= this.shipX + this.shipWidth) {
-            return "";
-        }
-        else {
-            return Direction.right;
-        }
-    };
-    return Ship;
-}(Graphics));
 var Game = /** @class */ (function (_super) {
     __extends(Game, _super);
     function Game(canvasElement, state) {
         var _this = _super.call(this) || this;
         _this.animationID = 0;
+        _this.points = 0;
+        _this.savedPoints = 0;
         _this.keyPressed = { ArrowLeft: false, ArrowRight: false };
+        _this.level = 1;
+        _this.winStatus = false;
         _this.canvas = canvasElement.canvas;
         _this.ctx = canvasElement.ctx;
         _this.width = canvasElement.width;
         _this.height = canvasElement.height;
         _this.state = state;
-        _this.ship = new Ship(_this.ctx, _this.width, _this.height);
+        _this.invaders = new Invaders(_this.ctx, _this.width, _this.height, _this.level);
+        _this.ship = new Ship(_this.ctx, _this.width, _this.height, _this.invaders.bombsDia);
         return _this;
     }
     Game.prototype.startScreen = function () {
         this.clearCanvas();
-        this.ctx.font = "30px Arial";
-        this.ctx.fillStyle = "white";
-        this.ctx.textBaseline = "middle";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText("Space Invaders", this.width / 2, this.height / 2);
-        this.ctx.font = "20px Arial";
-        this.ctx.fillText("Click or press a Key to start", this.width / 2, this.height / 2 + 40);
+        _super.prototype.drawText.call(this, this.ctx, "Space Invaders", this.width / 2, this.height / 2, 30);
+        _super.prototype.drawText.call(this, this.ctx, "Click or press a key to start", this.width / 2, this.height / 2 + 40, 20);
     };
     Game.prototype.countdown = function (seconds) {
         var _this = this;
         if (seconds === void 0) { seconds = 3; }
         this.clearCanvas();
-        this.ctx.font = "40px Arial";
-        this.ctx.fillStyle = "white";
-        this.ctx.textBaseline = "middle";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText(String(seconds), this.width / 2, this.height / 2);
+        _super.prototype.drawText.call(this, this.ctx, String(seconds), this.width / 2, this.height / 2, 40);
         if (seconds > 0) {
             setTimeout(function () { return _this.countdown(--seconds); }, 1000);
         }
@@ -120,14 +66,81 @@ var Game = /** @class */ (function (_super) {
     Game.prototype.playGame = function () {
         var _this = this;
         this.clearCanvas();
-        this.ship.draw(this.keyPressed);
-        this.animationID = window.requestAnimationFrame(function () { return _this.playGame(); });
+        this.ship.draw(this.keyPressed, this.invaders.collision.bind(this.invaders));
+        this.invaders.draw(this.ship.collision.bind(this.ship));
+        this.showPoints();
+        if (this.gameStatus()) {
+            this.state = GameState.wait;
+            this.endGame();
+        }
+        else {
+            this.animationID = window.requestAnimationFrame(function () {
+                return _this.playGame();
+            });
+        }
+    };
+    Game.prototype.showPoints = function () {
+        this.points =
+            this.savedPoints +
+                (this.invaders.allInvaders - this.invaders.invadersCount) *
+                    (10 * this.level);
+        _super.prototype.drawText.call(this, this.ctx, "Level: " + this.level + " Points: " + this.points + " Lives: " + this.ship.lives, 10, 10, 10, "start");
+    };
+    Game.prototype.gameStatus = function () {
+        if (this.ship.lives <= 0 || this.invaders.win >= 3) {
+            this.winStatus = false;
+            return true;
+        }
+        else if (this.invaders.invadersCount === 0) {
+            this.winStatus = true;
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+    Game.prototype.endGame = function () {
+        var _this = this;
+        var text;
+        var text2;
+        var text3;
+        if (this.winStatus) {
+            text = "You are a hero!";
+            text2 = "Points: " + this.points + " Level: " + this.level;
+            text3 = "Click or press a key to start next level!";
+            setTimeout(function () { return (_this.state = GameState.level); }, 1000);
+        }
+        else {
+            text = "The Invaders take the World! It's over!";
+            text2 = "You lost in level " + this.level + "! Points: " + this.points;
+            text3 = "Click or press a key to restart";
+            setTimeout(function () { return (_this.state = GameState.end); }, 1000);
+        }
+        this.clearCanvas();
+        _super.prototype.drawText.call(this, this.ctx, text, this.width / 2, this.height / 2, 30);
+        _super.prototype.drawText.call(this, this.ctx, text2, this.width / 2, this.height / 2 + 40, 20, "center", "yellow");
+        _super.prototype.drawText.call(this, this.ctx, text3, this.width / 2, this.height / 2 + 80, 20);
+    };
+    Game.prototype.levelUp = function () {
+        this.savedPoints = this.points;
+        this.level++;
+        this.invaders.reset(this.level);
+        this.ship.reset();
+        this.state = GameState.play;
+        this.countdown();
+    };
+    Game.prototype.endReset = function () {
+        this.savedPoints = 0;
+        this.level = 1;
+        this.invaders.reset(1);
+        this.ship.reset();
+        this.state = GameState.play;
+        this.countdown();
     };
     Game.prototype.keyDown = function (e) {
         if (this.state === GameState.start) {
             this.state = GameState.play;
-            //this.countdown();
-            this.playGame();
+            this.countdown();
         }
         else if (this.state === GameState.play) {
             e.preventDefault();
@@ -138,8 +151,14 @@ var Game = /** @class */ (function (_super) {
                 this.keyPressed.ArrowRight = true;
             }
             else if (e.keyCode === 32 || e.key === " ") {
-                this.ship.rocket();
+                this.ship.fireRocket();
             }
+        }
+        else if (this.state === GameState.end) {
+            this.endReset();
+        }
+        else if (this.state === GameState.level) {
+            this.levelUp();
         }
     };
     Game.prototype.keyUp = function (e) {
@@ -153,9 +172,11 @@ var Game = /** @class */ (function (_super) {
         }
     };
     Game.prototype.touch = function (e) {
+        e.preventDefault();
         this.pointer(e.touches[0].pageX);
     };
     Game.prototype.mouse = function (e) {
+        e.preventDefault();
         this.pointer(e.clientX);
     };
     Game.prototype.pointer = function (posX) {
@@ -176,6 +197,22 @@ var Game = /** @class */ (function (_super) {
             this.keyPressed.ArrowLeft = false;
         }
     };
+    Game.prototype.pointerClick = function (e) {
+        e.preventDefault();
+        if (this.state === GameState.start) {
+            this.state = GameState.play;
+            this.countdown();
+        }
+        else if (this.state === GameState.play) {
+            this.ship.fireRocket();
+        }
+        else if (this.state === GameState.end) {
+            this.endReset();
+        }
+        else if (this.state === GameState.level) {
+            this.levelUp();
+        }
+    };
     Game.prototype.clearCanvas = function () {
         _super.prototype.colorRect.call(this, this.ctx, 0, 0, this.canvas.width, this.canvas.height, "black");
     };
@@ -188,3 +225,5 @@ window.addEventListener("keydown", game.keyDown.bind(game));
 window.addEventListener("keyup", game.keyUp.bind(game));
 window.addEventListener("mousemove", game.mouse.bind(game));
 window.addEventListener("touchmove", game.touch.bind(game));
+window.addEventListener("click", game.pointerClick.bind(game));
+window.addEventListener("touchstart", game.pointerClick.bind(game));

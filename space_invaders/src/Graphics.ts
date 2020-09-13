@@ -6,7 +6,7 @@ class Graphics {
         boxWidth: number,
         boxHeight: number,
         fillColor: string
-    ) {
+    ): void {
         ctx.fillStyle = fillColor;
         ctx.fillRect(tolLeftX, topLeftY, boxWidth, boxHeight);
     }
@@ -17,21 +17,26 @@ class Graphics {
         centerY: number,
         radius: number,
         fillColor: string
-    ) {
+    ): void {
         ctx.fillStyle = fillColor;
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
         ctx.fill();
     }
 
-    colorText(
+    drawText(
         ctx: CanvasRenderingContext2D,
         showWords: string,
         textX: number,
-        TextY: number,
-        fillColor: string
-    ) {
-        ctx.fillStyle = fillColor;
-        ctx.fillText(showWords, textX, TextY);
+        textY: number,
+        fontSize: number,
+        align: CanvasTextAlign = "center",
+        color: string = "white"
+    ): void {
+        ctx.font = `${fontSize}px Arial`;
+        ctx.fillStyle = color;
+        ctx.textBaseline = "middle";
+        ctx.textAlign = align;
+        ctx.fillText(showWords, textX, textY);
     }
 }

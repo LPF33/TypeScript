@@ -12,9 +12,14 @@ var Graphics = /** @class */ (function () {
         ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
         ctx.fill();
     };
-    Graphics.prototype.colorText = function (ctx, showWords, textX, TextY, fillColor) {
-        ctx.fillStyle = fillColor;
-        ctx.fillText(showWords, textX, TextY);
+    Graphics.prototype.drawText = function (ctx, showWords, textX, textY, fontSize, align, color) {
+        if (align === void 0) { align = "center"; }
+        if (color === void 0) { color = "white"; }
+        ctx.font = fontSize + "px Arial";
+        ctx.fillStyle = color;
+        ctx.textBaseline = "middle";
+        ctx.textAlign = align;
+        ctx.fillText(showWords, textX, textY);
     };
     return Graphics;
 }());
