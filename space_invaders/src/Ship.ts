@@ -96,7 +96,7 @@ class Ship extends Graphics {
         }
     }
 
-    collision(x: number, y: number) {
+    collision(x: number, y: number): boolean {
         for (let i = 0; i < this.rocketArr.length; i++) {
             const rocket = this.rocketArr[i];
             const distance_2 =
@@ -130,7 +130,7 @@ class Ship extends Graphics {
         }
     }
 
-    reset() {
+    reset(): void {
         this.shipX = this.canvasWidth / 2 - this.shipWidth / 2;
         this.shipY = this.canvasHeight - this.shipHeight - 10;
         this.lastRocketFired = null;

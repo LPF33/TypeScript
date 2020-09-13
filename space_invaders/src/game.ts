@@ -124,7 +124,7 @@ class Game extends Graphics {
         }
     }
 
-    showPoints() {
+    showPoints(): void {
         this.points =
             this.savedPoints +
             (this.invaders.allInvaders - this.invaders.invadersCount) *
@@ -186,7 +186,7 @@ class Game extends Graphics {
         );
     }
 
-    levelUp() {
+    levelUp(): void {
         this.savedPoints = this.points;
         this.level++;
         this.invaders.reset(this.level);
@@ -195,7 +195,7 @@ class Game extends Graphics {
         this.countdown();
     }
 
-    endReset() {
+    endReset(): void {
         this.savedPoints = 0;
         this.level = 1;
         this.invaders.reset(1);
@@ -261,7 +261,7 @@ class Game extends Graphics {
         }
     }
 
-    pointerClick(e: MouseEvent | TouchEvent) {
+    pointerClick(e: MouseEvent | TouchEvent): void {
         e.preventDefault();
         if (this.state === GameState.start) {
             this.state = GameState.play;

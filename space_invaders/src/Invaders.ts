@@ -219,7 +219,7 @@ class Invaders extends Graphics {
         }
     }
 
-    reset(level: number) {
+    reset(level: number): void {
         this.level = level;
         this.invaderRows = 4;
         this.invadersCount = 0;
