@@ -24,19 +24,19 @@ export class Track {
     constructor(
         public carPic: HTMLImageElement,
         public secondCarPic: HTMLImageElement,
-        public update: () => void,
+        public socket: any,
         public context: CanvasRenderingContext2D,
         public trackGrid: number[]
     ) {}
 
-    countLoadedImagesAndLaunchIfReady() {
+    countLoadedImagesAndLaunchIfReady(): void {
         this.picsToLoad--;
         if (!this.picsToLoad) {
-            setInterval(this.update, 1000 / 30);
+            this.socket.emit("finished-loading");
         }
     }
 
-    loadImage(imgVar: HTMLImageElement, fileName: string) {
+    loadImage(imgVar: HTMLImageElement, fileName: string): void {
         imgVar.addEventListener(
             "load",
             this.countLoadedImagesAndLaunchIfReady.bind(this)
@@ -44,7 +44,7 @@ export class Track {
         imgVar.src = "/MiniRacer/images/" + fileName;
     }
 
-    loadImageForTrackCode(trackCode: number, fileName: string) {
+    loadImageForTrackCode(trackCode: number, fileName: string): void {
         this.trackPics[trackCode] = document.createElement("img");
         this.loadImage(this.trackPics[trackCode], fileName);
     }
@@ -73,11 +73,11 @@ export class Track {
         }
     }
 
-    setTrackGrid(trackGrid: number[]) {
+    setTrackGrid(trackGrid: number[]): void {
         this.trackGrid = trackGrid;
     }
 
-    drawtracks() {
+    drawtracks(): void {
         let arrayIndex = 0;
         let drawTileX = 0;
         let drawTileY = 0;
@@ -94,7 +94,7 @@ export class Track {
         }
     }
 
-    cartrackHandling(whichCar: Car) {
+    cartrackHandling(whichCar: Car): void {
         const cartrackCol = Math.floor(whichCar.x / trackW);
         const cartrackRow = Math.floor(whichCar.y / trackH);
 
@@ -122,11 +122,11 @@ export class Track {
         }
     }
 
-    rowColToArrayIndex(col: number, row: number) {
+    rowColToArrayIndex(col: number, row: number): number {
         return col + trackColumns * row;
     }
 
-    returnTileTypeAtColRow(whichCar: Car, col: number, row: number) {
+    returnTileTypeAtColRow(whichCar: Car, col: number, row: number): number {
         if (col >= 0 && col < trackColumns && row >= 0 && row < trackRows) {
             const trackIndexUnderCoord = this.rowColToArrayIndex(col, row);
             if (

@@ -4,7 +4,7 @@ export function drawImageCenteredWithRotation(
     atX: number,
     atY: number,
     withAng: number
-) {
+): void {
     ctx.save();
     ctx.translate(atX, atY);
     ctx.rotate(withAng);
@@ -19,7 +19,7 @@ export function colorRect(
     boxWidth: number,
     boxHeight: number,
     fillColor: string
-) {
+): void {
     ctx.fillStyle = fillColor;
     ctx.fillRect(tolLeftX, topLeftY, boxWidth, boxHeight);
 }
@@ -30,7 +30,7 @@ export function colorCirlce(
     centerY: number,
     radius: number,
     fillColor: string
-) {
+): void {
     ctx.fillStyle = fillColor;
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
@@ -41,9 +41,26 @@ export function colorText(
     ctx: CanvasRenderingContext2D,
     showWords: string,
     textX: number,
-    TextY: number,
-    fillColor: string
-) {
-    ctx.fillStyle = fillColor;
-    ctx.fillText(showWords, textX, TextY);
+    textY: number,
+    fontSize: number,
+    color: string = "white",
+    align: CanvasTextAlign = "center"
+): void {
+    ctx.font = `${fontSize}px Arial`;
+    ctx.fillStyle = color;
+    ctx.textAlign = align;
+    ctx.fillText(showWords, textX, textY);
+}
+
+export function convertTime(time: number) {
+    const milsec: number = time % 1000;
+    let seconds: number = Math.floor(time / 1000);
+    let minutes: number = 0;
+    if (seconds > 60) {
+        minutes = Math.floor(seconds / 60);
+        seconds -= minutes * 60;
+    }
+    let sec = seconds < 10 ? `0${seconds}` : seconds;
+
+    return `${minutes}:${sec}:${milsec}`;
 }

@@ -10,7 +10,7 @@ export class keyboardControl {
         this.setupInput();
     }
 
-    keySet(key: number, whichCar: Car, setTo: boolean) {
+    keySet(key: number, whichCar: Car, setTo: boolean): void {
         if (key === this.key_Left) {
             whichCar.keyHeld_Left = setTo;
         }
@@ -25,15 +25,15 @@ export class keyboardControl {
         }
     }
 
-    keyDown(e: any) {
+    keyDown(e: any): void {
         this.keySet(e.keyCode, this.playerCar, true);
     }
 
-    keyReleased(e: any) {
+    keyReleased(e: any): void {
         this.keySet(e.keyCode, this.playerCar, false);
     }
 
-    setupInput() {
+    setupInput(): void {
         document.addEventListener("keydown", this.keyDown.bind(this));
         document.addEventListener("keyup", this.keyReleased.bind(this));
 

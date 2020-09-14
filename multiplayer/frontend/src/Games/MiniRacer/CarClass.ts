@@ -18,7 +18,8 @@ export class Car {
     name: string = "Car";
     prevPos: number = Infinity;
     round: number = 0;
-    time: Date[] = [];
+    time: number[] = [];
+    timer: number = 0;
 
     keyHeld_Gas: boolean = false;
     keyHeld_Reverse: boolean = false;
@@ -69,20 +70,56 @@ export class Car {
         }
     }
 
-    rowColToArrayIndex(col: number, row: number) {
+    rowColToArrayIndex(col: number, row: number): number {
         return col + trackColumns * row;
     }
 
-    roundUpdate() {
+    roundUpdate(): void {
         if (this.playerNumber) {
             this.round++;
-            if (this.round === 2) {
-                this.socket.emit("track-finished", this.playerNumber);
+            const logTime = Date.now();
+            if (this.round > 1) {
+                this.round === 2
+                    ? this.time.push(logTime - this.time[0])
+                    : this.time.push(
+                          logTime - this.time[0] - this.time[this.round - 2]
+                      );
+            }
+            if (this.round === 3) {
+                this.time.push(logTime - this.time[0]);
+                this.socket.emit("track-finished", {
+                    player: this.playerNumber,
+                    time: this.time,
+                });
             }
         }
     }
 
-    move(track: Track) {
+    startTimer(): void {
+        this.time = [];
+        this.timer = Date.now();
+        this.time.push(this.timer);
+    }
+
+    getTime(): string {
+        const time = Date.now() - this.timer;
+        const milsec: number = time % 1000;
+        let seconds: number = Math.floor(time / 1000);
+        let minutes: number = 0;
+        if (seconds > 60) {
+            minutes = Math.floor(seconds / 60);
+            seconds -= minutes * 60;
+        }
+        let round: number = this.round;
+        if (this.round < 1) {
+            round = 0;
+        }
+        let sec = seconds < 10 ? `0${seconds}` : seconds;
+
+        return `Player: ${this.playerNumber} Round: ${round} Time: ${minutes}:${sec}:${milsec}`;
+    }
+
+    move(track: Track): void {
         this.speed *= 0.94;
         if (this.keyHeld_Gas) {
             this.speed += 0.5;
@@ -106,13 +143,13 @@ export class Car {
         track.cartrackHandling(this);
     }
 
-    secondPlayer(data: SecondCarData) {
+    secondPlayer(data: SecondCarData): void {
         this.x = data.x;
         this.y = data.y;
         this.ang = data.ang;
     }
 
-    drawCar(check: boolean) {
+    drawCar(check: boolean): void {
         if (check) {
             this.socket.emit("draw-car", {
                 x: this.x,

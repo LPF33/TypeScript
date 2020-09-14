@@ -58,11 +58,14 @@ io.on("connection", function (socket) {
     socket.on("ready-to-play", function () {
         io.to(room).emit("ready-to-play");
     });
+    socket.on("finished-loading", function () {
+        io.to(room).emit("finished-loading");
+    });
     socket.on("draw-car", function (data) {
         socket.to(room).emit("draw-car", data);
     });
     socket.on("track-finished", function (data) {
-        io.to(room).emit("race-finished");
+        io.to(room).emit("race-finished", data);
     });
 });
 server.listen(process.env.Port || 8080);

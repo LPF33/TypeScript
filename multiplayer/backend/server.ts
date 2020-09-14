@@ -40,12 +40,16 @@ io.on("connection", (socket): void => {
         io.to(room).emit("ready-to-play");
     });
 
+    socket.on("finished-loading", (): void => {
+        io.to(room).emit("finished-loading");
+    });
+
     socket.on("draw-car", (data): void => {
         socket.to(room).emit("draw-car", data);
     });
 
     socket.on("track-finished", (data): void => {
-        io.to(room).emit("race-finished");
+        io.to(room).emit("race-finished", data);
     });
 });
 
