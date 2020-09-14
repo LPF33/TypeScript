@@ -78,14 +78,14 @@ export class Car {
         if (this.playerNumber) {
             this.round++;
             const logTime = Date.now();
-            if (this.round > 1) {
+            if (this.round > 1 && this.round <= 4) {
                 this.round === 2
                     ? this.time.push(logTime - this.time[0])
                     : this.time.push(
                           logTime - this.time[0] - this.time[this.round - 2]
                       );
             }
-            if (this.round === 3) {
+            if (this.round === 4) {
                 this.time.push(logTime - this.time[0]);
                 this.socket.emit("track-finished", {
                     player: this.playerNumber,

@@ -1,6 +1,7 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import path from "path";
 import helmet from "helmet";
+import cors from "cors";
 import { createServer } from "http";
 import * as Socket from "socket.io";
 
@@ -8,7 +9,41 @@ const app = express();
 
 app.use(express.static(path.join(__dirname + "/../frontend/build")));
 
-app.use(helmet());
+const options = {
+    origin: false,
+};
+app.use(cors(options));
+
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: ["'self'", "http://localhost:8080/"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "fonts.googleapis.com",
+                "fonts.gstatic.com",
+            ],
+            fontSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "fonts.googleapis.com",
+                "fonts.gstatic.com",
+            ],
+        },
+    })
+);
+app.use(helmet.dnsPrefetchControl());
+app.use(helmet.expectCt());
+app.use(helmet.frameguard());
+app.use(helmet.hidePoweredBy());
+app.use(helmet.hsts());
+app.use(helmet.ieNoOpen());
+app.use(helmet.noSniff());
+app.use(helmet.permittedCrossDomainPolicies());
+app.use(helmet.referrerPolicy());
+app.use(helmet.xssFilter());
 
 const server = createServer(app);
 const io = Socket.listen(server);
@@ -56,8 +91,8 @@ io.on("connection", (socket): void => {
     });
 });
 
-app.get("*", (req, res) => {
+app.get("*", (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname + "/../frontend/build/index.html"));
 });
 
-server.listen(process.env.Port || 8080);
+server.listen(process.env.PORT || 8080);

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { v4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
 
-const room = v4();
+const room = uuidv4();
 
 const Title = styled.h1`
     position: absolute;
