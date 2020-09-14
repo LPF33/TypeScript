@@ -14,8 +14,8 @@ In my future projects I will only use TypeScript! I have been convinced!
     -   Node.js
     -   Socket.io
 -   #### About:
-    Finally I build a multiplayer-website. You send the given link to friend. This link
-    connects both players to a Gaming-Room. Only Two-Player-Games ( for the moment ).
+    Finally I build a multiplayer-website. You send the given link to a friend. This link
+    connects both players to a private Gaming-Room. Only Two-Player-Games ( for the moment ).
     First game: Mini-Racer game. The signaling is handled by socket.io.
     Not finished yet, I will add more features soon!
 -   #### Preview:

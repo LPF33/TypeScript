@@ -23,6 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var path_1 = __importDefault(require("path"));
 var helmet_1 = __importDefault(require("helmet"));
 var http_1 = require("http");
 var Socket = __importStar(require("socket.io"));
@@ -67,5 +68,9 @@ io.on("connection", function (socket) {
     socket.on("track-finished", function (data) {
         io.to(room).emit("race-finished", data);
     });
+});
+app.use(express_1.default.static(path_1.default.join(__dirname + "/frontend/build")));
+app.get("*", function (req, res) {
+    res.sendFile(path_1.default.join(__dirname + "/frontend/build/index.html"));
 });
 server.listen(process.env.Port || 8080);

@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import helmet from "helmet";
 import { createServer } from "http";
 import * as Socket from "socket.io";
@@ -51,6 +52,12 @@ io.on("connection", (socket): void => {
     socket.on("track-finished", (data): void => {
         io.to(room).emit("race-finished", data);
     });
+});
+
+app.use(express.static(path.join(__dirname + "/frontend/build")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
 });
 
 server.listen(process.env.Port || 8080);

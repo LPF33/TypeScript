@@ -10,7 +10,9 @@
         "start:build": "cd backend && tsc -w",
         "start:run": "nodemon backend/server.js",
         "start:frontend": "npm start --prefix frontend",
-        "start": "concurrently npm:start:*"
+        "dev": "concurrently npm:start:*",
+        "start": "node backend/server.js",
+        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd frontend && npm install && npm run build"
     },
     "keywords": [],
     "author": "",
