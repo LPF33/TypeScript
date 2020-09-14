@@ -6,6 +6,8 @@ import * as Socket from "socket.io";
 
 const app = express();
 
+app.use(express.static(path.join(__dirname + "/../frontend/build")));
+
 app.use(helmet());
 
 const server = createServer(app);
@@ -54,10 +56,8 @@ io.on("connection", (socket): void => {
     });
 });
 
-app.use(express.static(path.join(__dirname + "/frontend/build")));
-
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
+    res.sendFile(path.join(__dirname + "/../frontend/build/index.html"));
 });
 
 server.listen(process.env.Port || 8080);

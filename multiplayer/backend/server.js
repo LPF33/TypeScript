@@ -28,6 +28,7 @@ var helmet_1 = __importDefault(require("helmet"));
 var http_1 = require("http");
 var Socket = __importStar(require("socket.io"));
 var app = express_1.default();
+app.use(express_1.default.static(path_1.default.join(__dirname + "/../frontend/build")));
 app.use(helmet_1.default());
 var server = http_1.createServer(app);
 var io = Socket.listen(server);
@@ -69,8 +70,7 @@ io.on("connection", function (socket) {
         io.to(room).emit("race-finished", data);
     });
 });
-app.use(express_1.default.static(path_1.default.join(__dirname + "/frontend/build")));
 app.get("*", function (req, res) {
-    res.sendFile(path_1.default.join(__dirname + "/frontend/build/index.html"));
+    res.sendFile(path_1.default.join(__dirname + "/../frontend/build/index.html"));
 });
 server.listen(process.env.Port || 8080);
