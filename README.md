@@ -14,17 +14,17 @@ In my future projects I will only use TypeScript! I have been convinced!
     -   Node.js
     -   Socket.io
 -   #### About:
-    Finally I build a multiplayer-website. You send the given link to a friend. This link
+    Finally I have started to build a multiplayer-website. You send the given link to a friend. This link
     connects both players to a private Gaming-Room. Only Two-Player-Games ( for the moment ).
     First game: Mini-Racer game. The signaling is handled by socket.io.
-    Not finished yet, I will add more features soon!
+    Styling and more features are coming soon!
 -   #### Preview:
     missing
 
 ### space_invaders:
 
 -   Play the game on https://larspefe.herokuapp.com/Games
--   Classical shoot'em up game. Great way to to implement all the features of a programming language.
+-   Classical shoot'em up game. Great way to implement all the features of a programming language.
 -   ### Preview:
     ![](SpaceInvaders.PNG)
 
@@ -39,4 +39,4 @@ In my future projects I will only use TypeScript! I have been convinced!
 -   #### pokedex : fetch data from poke.api and read it.
 -   #### sortAlgorithmen: Using classes and bubbleSort-Algorithmen to sort number-Arrays, string-Arrays and linked Lists.
 -   #### starwars: React-App, fetch StarWars-Data and use useQuery-Hook / usePaginatedQuery-Hook.
--   #### usermaps: Pin with Faker-package users/companies with fake coordinates to a Mapbox-map.
+-   #### usermaps: Set markers to specified coordinates on a Mapbox-Map with Faker-npm-package for some random fake users/companies.
