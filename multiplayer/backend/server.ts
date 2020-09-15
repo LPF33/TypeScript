@@ -79,6 +79,7 @@ io.on("connection", (socket): void => {
     });
 
     socket.on("finished-loading", (): void => {
+        console.log(socket.id);
         io.to(room).emit("finished-loading");
     });
 

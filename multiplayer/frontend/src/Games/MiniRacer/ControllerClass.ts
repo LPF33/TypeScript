@@ -1,4 +1,5 @@
 import { Car } from "./CarClass";
+import $ from "jquery";
 
 export class keyboardControl {
     key_Up: number = 38;
@@ -34,8 +35,8 @@ export class keyboardControl {
     }
 
     setupInput(): void {
-        document.addEventListener("keydown", this.keyDown.bind(this));
-        document.addEventListener("keyup", this.keyReleased.bind(this));
+        $(document).on("keydown", this.keyDown.bind(this));
+        $(document).on("keyup", this.keyReleased.bind(this));
 
         this.playerCar.setupInput(
             this.key_Up,

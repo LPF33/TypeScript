@@ -3,11 +3,19 @@ import * as Graphics from "./graphics";
 import { keyboardControl } from "./ControllerClass";
 import { Car } from "./CarClass";
 import { Track } from "./TrackClass";
+import $ from "jquery";
 
 interface SecondCarData {
     x: number;
     y: number;
     ang: number;
+}
+
+enum Events {
+    RaceFinish = "race-finished",
+    DrawCar = "draw-car",
+    Load = "finished-loading",
+    UserLeave = "user-leave",
 }
 
 let carsFinished: number = 0;
@@ -18,29 +26,28 @@ let secondePlayerCar: Car;
 let track: Track;
 let intervalID: Set<number> = new Set();
 let storeTimes: { player: number; time: number[] }[] = [];
+let trackGrid: number[];
 
+const carPic: HTMLImageElement = document.createElement("img");
+const secondCarPic: HTMLImageElement = document.createElement("img");
 const levelList: number[][] = [
     Levels.levelOne,
     Levels.levelTwo,
     Levels.levelThree,
 ];
 
-const carPic: HTMLImageElement = document.createElement("img");
-const secondCarPic: HTMLImageElement = document.createElement("img");
-
 export let startPos: number[];
-
-let trackGrid: number[];
 
 export function clearCanvasInterval(): void {
     intervalID.forEach((id) => clearInterval(id));
+    $(document).off("keydown");
+    $(document).off("keyup");
 }
 
 export default function MiniRacerGame(
     canvas: HTMLCanvasElement | null,
     socket: any,
-    playerNumber: number,
-    room: string
+    playerNumber: number
 ): void {
     if (!canvas) {
         return;
@@ -87,10 +94,6 @@ export default function MiniRacerGame(
         moveAll();
         drawAll();
     };
-
-    socket.on("draw-car", (data: SecondCarData): void => {
-        secondePlayerCar.secondPlayer(data);
-    });
 
     const countdown = (seconds: number = 3): void => {
         Graphics.colorRect(ctx, 0, 0, canvas.width, canvas.height, "black");
@@ -174,6 +177,14 @@ export default function MiniRacerGame(
                 20,
                 "white"
             );
+            Graphics.colorText(
+                ctx,
+                `Round 3: ${Graphics.convertTime(player.time[3])}`,
+                canvas.width / 2,
+                num + 110,
+                20,
+                "white"
+            );
         }
 
         Graphics.colorText(
@@ -185,11 +196,15 @@ export default function MiniRacerGame(
         );
     };
 
-    socket.on("user-leave", (): void => {
+    socket.on(Events.DrawCar, (data: SecondCarData): void => {
+        secondePlayerCar.secondPlayer(data);
+    });
+
+    socket.on(Events.UserLeave, (): void => {
         clearCanvasInterval();
     });
 
-    socket.on("finished-loading", (): void => {
+    socket.on(Events.Load, (): void => {
         playersFinishedLoading++;
         if (playersFinishedLoading === 2) {
             playersFinishedLoading = 0;
@@ -198,7 +213,7 @@ export default function MiniRacerGame(
     });
 
     socket.on(
-        "race-finished",
+        Events.RaceFinish,
         ({ player, time }: { player: number; time: number[] }): void => {
             storeTimes.push({ player, time });
             carsFinished++;
@@ -213,6 +228,13 @@ export default function MiniRacerGame(
             }
         }
     );
+
+    if (socket._callbacks["$" + Events.RaceFinish].length > 1) {
+        socket._callbacks["$" + Events.DrawCar].splice(0, 1);
+        socket._callbacks["$" + Events.RaceFinish].splice(0, 1);
+        socket._callbacks["$" + Events.UserLeave].splice(1, 1);
+        socket._callbacks["$" + Events.Load].splice(0, 1);
+    }
 
     loadLevel(levelList[0], true);
 }

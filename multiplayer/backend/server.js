@@ -72,6 +72,7 @@ io.on("connection", (socket) => {
         io.to(room).emit("ready-to-play");
     });
     socket.on("finished-loading", () => {
+        console.log(socket.id);
         io.to(room).emit("finished-loading");
     });
     socket.on("draw-car", (data) => {

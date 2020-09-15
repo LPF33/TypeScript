@@ -36,6 +36,7 @@ export const useMultiPlayerConnection = (room: string, game: GameCanvas) => {
         });
 
         socket.on(Events.UserLeft, (): void => {
+            playerNumber.current = 1;
             setComplete(false);
             setReady(false);
             setClicked(false);

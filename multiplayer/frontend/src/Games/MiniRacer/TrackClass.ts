@@ -1,6 +1,7 @@
 import * as Levels from "./levels";
 import { Car } from "./CarClass";
 import { startPos } from "./MiniRacer";
+import $ from "jquery";
 
 interface ImageList1 {
     varName: HTMLImageElement;
@@ -37,10 +38,9 @@ export class Track {
     }
 
     loadImage(imgVar: HTMLImageElement, fileName: string): void {
-        imgVar.addEventListener(
-            "load",
-            this.countLoadedImagesAndLaunchIfReady.bind(this)
-        );
+        $(imgVar).on("load", () => {
+            this.countLoadedImagesAndLaunchIfReady();
+        });
         imgVar.src = "/MiniRacer/images/" + fileName;
     }
 

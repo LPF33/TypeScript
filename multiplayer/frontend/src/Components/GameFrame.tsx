@@ -61,8 +61,7 @@ const Exit = styled(Link)`
 type GamePlay = (
     canvas: HTMLCanvasElement | null,
     socket: any,
-    playerNumber: number,
-    room: string
+    playerNumber: number
 ) => void;
 
 interface GameProps {
@@ -82,7 +81,7 @@ const GameFrame: React.FC<GameProps> = ({
 
     const game = (num: number, socket: any): void => {
         const gameCanvas = canvasRef.current;
-        play(gameCanvas, socket, num, room);
+        play(gameCanvas, socket, num);
     };
 
     const {

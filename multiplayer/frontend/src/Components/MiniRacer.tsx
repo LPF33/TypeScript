@@ -10,8 +10,7 @@ type TParams = { room: string };
 type GamePlay = (
     canvas: HTMLCanvasElement | null,
     socket: any,
-    playerNumber: number,
-    room: string
+    playerNumber: number
 ) => void;
 
 interface Data {
