@@ -142,7 +142,7 @@ export default function MiniRacerGame(
             30
         );
         for (let player of storeTimes) {
-            const num = player.player === 1 ? 80 : 200;
+            const num = player.player === 1 ? 80 : 240;
             Graphics.colorText(
                 ctx,
                 `Times of Player ${player.player}`,
@@ -218,7 +218,7 @@ export default function MiniRacerGame(
             storeTimes.push({ player, time });
             carsFinished++;
             if (carsFinished === 2) {
-                clearCanvasInterval();
+                intervalID.forEach((id) => clearInterval(id));
                 carsFinished = 0;
                 showPoints();
                 level = level === 2 ? 0 : ++level;

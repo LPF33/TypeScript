@@ -79,11 +79,11 @@ export class Car {
             this.round++;
             const logTime = Date.now();
             if (this.round > 1 && this.round <= 4) {
-                this.round === 2
-                    ? this.time.push(logTime - this.time[0])
-                    : this.time.push(
-                          logTime - this.time[0] - this.time[this.round - 2]
-                      );
+                let sum: number = 0;
+                for (let i = 0; i < this.round - 1; i++) {
+                    sum += this.time[i];
+                }
+                this.time.push(logTime - sum);
             }
             if (this.round === 4) {
                 this.time.push(logTime - this.time[0]);
