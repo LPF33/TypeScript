@@ -1,0 +1,54 @@
+#shipping {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.89);
+}
+
+#shipping .back {
+    text-decoration: none;
+    color: white;
+    margin: 10px;
+}
+
+#shipping form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    margin-top: 1vh;
+}
+
+#shipping form [type="text"] {
+    max-width: 500px;
+    width: 100vw;
+    margin: 1.5vh;
+    height: 2rem;
+    text-align: center;
+}
+
+#question-address {
+    color: white;
+}
+
+#question-address input {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 10px;
+}
+
+#question-address label {
+    line-height: 2rem;
+}
+
+#shipping .next {
+    position: absolute;
+    bottom: 10px;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    padding: 5px;
+    text-align: center;
+    width: 100px;
+}
