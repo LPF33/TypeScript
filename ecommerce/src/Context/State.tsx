@@ -5,6 +5,7 @@ export interface TContext {
     setCart: React.Dispatch<React.SetStateAction<TCart[]>>;
     address: TAddress;
     setAddress: React.Dispatch<React.SetStateAction<TAddress>>;
+    sumItems: () => number;
     calcSum: () => number;
     twoAddresses: boolean;
     set2Addresses: React.Dispatch<React.SetStateAction<boolean>>;
@@ -67,6 +68,16 @@ export default function StateProvider({
         return sum;
     };
 
+    const sumItems = (): number => {
+        let sum: number = 0;
+        if (cart.length > 0) {
+            for (let item of cart) {
+                sum += item.amount;
+            }
+        }
+        return sum;
+    };
+
     return (
         <StateContext.Provider
             value={{
@@ -74,6 +85,7 @@ export default function StateProvider({
                 setCart,
                 address,
                 setAddress,
+                sumItems,
                 calcSum,
                 twoAddresses,
                 set2Addresses,

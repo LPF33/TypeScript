@@ -40,3 +40,26 @@
     height: 2rem;
     margin-right: 20px;
 }
+
+#credit {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#credit input {
+    padding: 5px;
+    margin: 5px 0;
+}
+
+#billing .next {
+    position: absolute;
+    bottom: 10px;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    padding: 5px;
+    text-align: center;
+    width: 100px;
+}

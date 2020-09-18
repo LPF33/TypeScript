@@ -5,6 +5,7 @@ import { Buy } from "./Components/Buy";
 import Shipping from "./Components/Shipping";
 import ShoppingCart from "./Components/ShoppingCart";
 import Billing from "./Components/Billing";
+import Order from "./Components/Order";
 import StateProvider from "./Context/State";
 
 const App: React.FC = () => {
@@ -24,6 +25,9 @@ const App: React.FC = () => {
                     </Route>
                     <Route exact path="/billing">
                         <Billing />
+                    </Route>
+                    <Route exact path="/order">
+                        <Order />
                     </Route>
                     <Route render={() => <Redirect to="/" />}></Route>
                 </Switch>

@@ -36,6 +36,27 @@ const Billing: React.FC = () => {
                                 details and you will be charged as soon as it
                                 leaves our warehouse.
                             </p>
+                            <div id="credit">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Name on CreditCard"
+                                />
+                                <input
+                                    type="password"
+                                    name="creditCardNumber"
+                                    placeholder="CreditCard number"
+                                />
+                                <label>Expiration date:</label>
+                                <input type="month" name="date" />
+                                <label>CVV number:</label>
+                                <input
+                                    type="text"
+                                    name="cvv"
+                                    placeholder="123"
+                                    pattern="^\d{3}$"
+                                />
+                            </div>
                         </div>
                     )}
                 </div>
@@ -58,6 +79,10 @@ const Billing: React.FC = () => {
                                 left our warehouse and have 14 days to pay. You
                                 just have to enter your date of birth.
                             </p>
+                            <div id="credit">
+                                <label>Date of birth:</label>
+                                <input type="date" name="birthdate" />
+                            </div>
                         </div>
                     )}
                 </div>
@@ -80,11 +105,26 @@ const Billing: React.FC = () => {
                                     details and you will be charged as soon as
                                     it leaves our warehouse.
                                 </p>
+                                <div id="credit">
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        placeholder="Name on debitcard"
+                                    />
+                                    <input
+                                        type="text"
+                                        name="ibanNumber"
+                                        placeholder="IBAN number"
+                                    />
+                                </div>
                             </div>
                         )}
                     </div>
                 </div>
             </form>
+            <Link to="/order" className="next">
+                Next <i className="fas fa-chevron-right"></i>
+            </Link>
         </div>
     );
 };

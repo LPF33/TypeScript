@@ -20,6 +20,10 @@
     margin-top: 1vh;
 }
 
+#shipping .error {
+    color: red;
+}
+
 #shipping form [type="text"] {
     max-width: 500px;
     width: 100vw;

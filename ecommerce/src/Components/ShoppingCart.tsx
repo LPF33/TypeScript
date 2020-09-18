@@ -6,19 +6,24 @@ import { Link } from "react-router-dom";
 type Action = "increment" | "decrement" | "delete";
 
 const ShoppingCart: React.FC = () => {
-    const { cart, calcSum } = React.useContext<TContext | null>(StateContext)!;
+    const { cart, calcSum, sumItems } = React.useContext<TContext | null>(
+        StateContext
+    )!;
 
     const shopRef = React.useRef<HTMLDivElement>(null!);
 
     const [show, setShow] = React.useState<string>("hide");
-    const [total, setTotal] = React.useState<number>(0);
+    const [total, setTotal] = React.useState<{ total: number; items: number }>({
+        total: 0,
+        items: 0,
+    });
 
     React.useEffect(() => {
         setShow("show");
     }, []);
 
     React.useEffect(() => {
-        setTotal(calcSum);
+        setTotal({ total: calcSum(), items: sumItems() });
     }, [cart]);
 
     return (
@@ -37,8 +42,8 @@ const ShoppingCart: React.FC = () => {
                     {cart.length > 0 && (
                         <div id="total">
                             <h5>Total: </h5>
-                            <h5>{cart.length} Items</h5>
-                            <h5>{total}€</h5>
+                            <h5>{total.items} Items</h5>
+                            <h5>{total.total}€</h5>
                         </div>
                     )}
                     {cart.length > 0 && (

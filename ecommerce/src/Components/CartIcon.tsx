@@ -4,20 +4,14 @@ import { useHistory } from "react-router-dom";
 import "./CartIcon.css";
 
 export const CartIcon: React.FC = () => {
-    const { cart } = React.useContext<TContext | null>(StateContext)!;
+    const { cart, sumItems } = React.useContext<TContext | null>(StateContext)!;
 
     const history = useHistory();
 
     const [count, setCount] = React.useState<number>(0);
 
     React.useEffect(() => {
-        let sum: number = 0;
-        if (cart.length > 0) {
-            for (let item of cart) {
-                sum += item.amount;
-            }
-        }
-        setCount(sum);
+        setCount(sumItems);
     }, [cart]);
 
     return (
