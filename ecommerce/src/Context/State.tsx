@@ -1,4 +1,5 @@
 import * as React from "react";
+import { TPayMethod } from "../Components/Billing";
 
 export interface TContext {
     cart: TCart[];
@@ -11,6 +12,8 @@ export interface TContext {
     set2Addresses: React.Dispatch<React.SetStateAction<boolean>>;
     billingAddress: TAddress;
     setBillingAddress: React.Dispatch<React.SetStateAction<TAddress>>;
+    payMethod: TPayMethod;
+    setStatePayMethod: React.Dispatch<React.SetStateAction<TPayMethod>>;
 }
 
 export interface TCart {
@@ -25,8 +28,8 @@ export interface TAddress {
     lastname: string;
     firstname: string;
     streetname: string;
-    streetnumber: number;
-    postalcode: number;
+    streetnumber: string;
+    postalcode: string;
     city: string;
 }
 
@@ -42,8 +45,8 @@ export default function StateProvider({
         lastname: "",
         firstname: "",
         streetname: "",
-        streetnumber: 0,
-        postalcode: 0,
+        streetnumber: "",
+        postalcode: "",
         city: "",
     });
 
@@ -53,10 +56,12 @@ export default function StateProvider({
         lastname: "",
         firstname: "",
         streetname: "",
-        streetnumber: 0,
-        postalcode: 0,
+        streetnumber: "",
+        postalcode: "",
         city: "",
     });
+
+    const [payMethod, setStatePayMethod] = React.useState<TPayMethod>("");
 
     const calcSum = (): number => {
         let sum = 0;
@@ -91,6 +96,8 @@ export default function StateProvider({
                 set2Addresses,
                 billingAddress,
                 setBillingAddress,
+                payMethod,
+                setStatePayMethod,
             }}
         >
             {children}

@@ -1,14 +1,20 @@
 import * as React from "react";
 import "./Billing.css";
 import { Link } from "react-router-dom";
+import { StateContext, TContext } from "../Context/State";
 
-type TPayMethod = "credit" | "debit" | "invoice" | "";
+export type TPayMethod = "credit" | "debit" | "invoice" | "";
 
 const Billing: React.FC = () => {
+    const { setStatePayMethod } = React.useContext<TContext | null>(
+        StateContext
+    )!;
+
     const [payMethod, setPayMethod] = React.useState<TPayMethod>("");
 
     const setPay = (e: any) => {
         setPayMethod(e.target.value);
+        setStatePayMethod(e.target.value);
     };
 
     return (
@@ -122,9 +128,11 @@ const Billing: React.FC = () => {
                     </div>
                 </div>
             </form>
-            <Link to="/order" className="next">
-                Next <i className="fas fa-chevron-right"></i>
-            </Link>
+            {payMethod && (
+                <Link to="/order" className="next">
+                    Next <i className="fas fa-chevron-right"></i>
+                </Link>
+            )}
         </div>
     );
 };
