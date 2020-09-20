@@ -19,7 +19,7 @@ In my future projects I will only use TypeScript! I have been convinced!
     First game: Mini-Racer game. The signaling is handled by socket.io.
     Styling and more features are coming soon!
 -   #### Preview:
-    missing
+    ![](multiplayer.gif)
 
 ### space_invaders:
 
