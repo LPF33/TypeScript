@@ -36,8 +36,6 @@ const levelList: number[][] = [
     Levels.levelThree,
 ];
 
-export let startPos: number[];
-
 export function clearCanvasInterval(): void {
     intervalID.forEach((id) => clearInterval(id));
     $(document).off("keydown");
@@ -114,7 +112,6 @@ export default function MiniRacerGame(
     };
 
     const loadLevel = (whichLevel: number[], start: boolean): void => {
-        startPos = [];
         trackGrid = [...whichLevel];
         if (start) {
             track = new Track(carPic, secondCarPic, socket, ctx, trackGrid);
@@ -124,11 +121,11 @@ export default function MiniRacerGame(
         }
 
         if (playerNumber === 1) {
-            playerCar.reset(trackGrid, startPos);
-            secondePlayerCar.reset(trackGrid, startPos);
+            playerCar.reset(trackGrid);
+            secondePlayerCar.reset(trackGrid);
         } else {
-            secondePlayerCar.reset(trackGrid, startPos);
-            playerCar.reset(trackGrid, startPos);
+            secondePlayerCar.reset(trackGrid);
+            playerCar.reset(trackGrid);
         }
     };
 

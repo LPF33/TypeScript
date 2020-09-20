@@ -35,6 +35,7 @@ function useVerifyAddress<T>(setter: TUseSetState<T>) {
         setter((prev) => {
             return { ...prev, [name]: value };
         });
+
         validateInput(name, value);
     };
 
