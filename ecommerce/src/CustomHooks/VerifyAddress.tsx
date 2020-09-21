@@ -1,6 +1,11 @@
 import * as React from "react";
 import { TAddress } from "../Context/State";
-import { checkName, checkPostal, checkStreet } from "./HelperFunctions";
+import {
+    checkName,
+    checkPostal,
+    checkStreet,
+    checkEmail,
+} from "./HelperFunctions";
 
 export enum EAddress {
     lastname = "lastname",
@@ -9,6 +14,7 @@ export enum EAddress {
     streetnumber = "streetnumber",
     postalcode = "postalcode",
     city = "city",
+    email = "email",
 }
 
 export type TCompletenss = {
@@ -20,6 +26,7 @@ export type TCompletenss = {
         streetnumber: boolean;
         postalcode: boolean;
         city: boolean;
+        email?: boolean;
     };
 };
 
@@ -67,6 +74,17 @@ function useVerifyAddress<T>(setter: TUseSetState<T>) {
             }
         }
 
+        if (name === EAddress.email) {
+            const emailCheck = checkEmail(val);
+            if (!emailCheck[0]) {
+                setError([emailCheck[1]]);
+                return false;
+            } else {
+                setError([]);
+                return true;
+            }
+        }
+
         return true;
     };
 
@@ -80,6 +98,7 @@ function useVerifyAddress<T>(setter: TUseSetState<T>) {
                 streetnumber: false,
                 postalcode: false,
                 city: false,
+                email: false,
             },
         };
 
@@ -96,6 +115,8 @@ function useVerifyAddress<T>(setter: TUseSetState<T>) {
                 arr.type.postalcode = bool;
             } else if (key === EAddress.city) {
                 arr.type.city = bool;
+            } else if (key === EAddress.email) {
+                arr.type.email = bool;
             }
         };
 

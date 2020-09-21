@@ -1,15 +1,25 @@
 #shopping-cart {
     width: 100%;
-    min-height: 20%;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.596);
+    background-color: rgba(0, 0, 0, 0.74);
+    -webkit-transition: top 0.6s ease-in;
+    -o-transition: top 0.6s ease-in;
     transition: top 0.6s ease-in;
+    overflow-y: auto;
 }
 
 .hide {
-    top: -20%;
+    top: -100%;
 }
 
 .show {
@@ -21,27 +31,26 @@
     background-color: white;
     padding: 10px;
     border-radius: 10px;
+    min-height: 20%;
 }
 
 #close {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 2rem;
-    height: 2rem;
+    top: 5px;
+    right: 10px;
     text-align: center;
-    padding: 10px;
-    border-radius: 50%;
-    line-height: 0.8rem;
     font-size: 1rem;
-    background-color: white;
     text-decoration: none;
     color: black;
 }
 
 .preview {
+    display: -ms-grid;
     display: grid;
+    -ms-grid-columns: 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
     margin: 1px 0;
 }
@@ -54,9 +63,15 @@
 }
 
 .preview .select {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     margin: 5px;
+    -webkit-box-align: baseline;
+    -ms-flex-align: baseline;
     align-items: baseline;
+    -webkit-box-pack: space-evenly;
+    -ms-flex-pack: space-evenly;
     justify-content: space-evenly;
 }
 
@@ -69,15 +84,27 @@
 }
 
 .preview .icon {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
     cursor: pointer;
 }
 
 #total {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: space-evenly;
+    -ms-flex-pack: space-evenly;
     justify-content: space-evenly;
     border-top: 1px solid rgb(99, 95, 95);
     border-bottom: 1px solid rgb(99, 95, 95);
@@ -92,7 +119,7 @@
     text-align: center;
     width: 100%;
     padding: 2px;
-    background-color: rgb(180, 215, 255);
+    background-color: rgb(113, 115, 117);
     border-radius: 0 0 5px 5px;
     color: black;
 }

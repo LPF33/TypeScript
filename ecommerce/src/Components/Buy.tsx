@@ -36,7 +36,7 @@ type Action = "increment" | "decrement";
 const ShopItem: React.FC<TData> = (item) => {
     const [count, setCount] = React.useState<number>(0);
 
-    const { setCart } = React.useContext<TContext | null>(StateContext)!;
+    const { cart, setCart } = React.useContext<TContext | null>(StateContext)!;
 
     const itemCount = (action: Action): void => {
         switch (action) {
@@ -51,16 +51,24 @@ const ShopItem: React.FC<TData> = (item) => {
 
     const addToCart = () => {
         if (count > 0) {
-            setCart((prev) => [
-                ...prev,
-                {
-                    id: item.id,
-                    product: item.product,
-                    amount: count,
-                    price: item.price,
-                    image: item.image,
-                },
-            ]);
+            const helper = [...cart];
+
+            const index = helper.findIndex((value) => value.id === item.id);
+            if (index === -1) {
+                setCart((prev) => [
+                    ...prev,
+                    {
+                        id: item.id,
+                        product: item.product,
+                        amount: count,
+                        price: item.price,
+                        image: item.image,
+                    },
+                ]);
+            } else {
+                helper[index].amount += count;
+                setCart(helper);
+            }
         }
 
         setCount(0);

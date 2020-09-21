@@ -27,3 +27,11 @@ export const checkStreet = (val: string): [boolean, string] => {
         ];
     }
 };
+
+export const checkEmail = (email: string): [boolean, string] => {
+    if (email.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)) {
+        return [true, ""];
+    } else {
+        return [false, "No valid email"];
+    }
+};

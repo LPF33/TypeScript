@@ -11,6 +11,7 @@ const BillingAddress: React.FC = () => {
     const {
         billingAddress,
         setBillingAddress,
+        set2Addresses,
     } = React.useContext<TContext | null>(StateContext)!;
 
     const { error, handleChange, checkCompleteness } = useVerifyAddress(
@@ -36,7 +37,9 @@ const BillingAddress: React.FC = () => {
     };
 
     React.useEffect(() => {
+        set2Addresses(false);
         if (complete.complete) {
+            set2Addresses(true);
             history.replace("/billing");
         }
     }, [complete]);

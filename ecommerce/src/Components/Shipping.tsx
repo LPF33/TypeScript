@@ -13,6 +13,7 @@ const Shipping: React.FC = () => {
         setAddress,
         twoAddresses,
         set2Addresses,
+        setHasAddress,
     } = React.useContext<TContext | null>(StateContext)!;
 
     const { error, handleChange, checkCompleteness } = useVerifyAddress(
@@ -28,6 +29,7 @@ const Shipping: React.FC = () => {
             streetnumber: true,
             postalcode: true,
             city: true,
+            email: true,
         },
     });
 
@@ -38,9 +40,12 @@ const Shipping: React.FC = () => {
     };
 
     React.useEffect(() => {
+        setHasAddress(false);
         if (complete.complete && twoAddresses) {
+            setHasAddress(true);
             history.replace("/billingaddress");
         } else if (complete.complete && !twoAddresses) {
+            setHasAddress(true);
             history.replace("/billing");
         }
     }, [complete]);
@@ -107,9 +112,20 @@ const Shipping: React.FC = () => {
                     onChange={handleChange}
                     className={complete.type.city ? "" : "empty"}
                 />
+                <label>Your email:</label>
+                <input
+                    type="text"
+                    autoComplete="off"
+                    name={EAddress.email}
+                    value={address.email}
+                    onChange={handleChange}
+                    className={complete.type.email ? "" : "empty"}
+                />
+
                 <div id="question-address">
                     <input
                         type="checkbox"
+                        checked={twoAddresses}
                         onChange={() => set2Addresses((prev) => !prev)}
                     />
                     <label>I have a different billing address</label>

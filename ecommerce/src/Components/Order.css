@@ -1,0 +1,96 @@
+#order {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.89);
+    color: white;
+    overflow-y: auto;
+}
+
+#order .back {
+    text-decoration: none;
+    color: white;
+    margin: 10px;
+}
+
+#order .next {
+    position: relative;
+    bottom: 10px;
+    width: 100%;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    padding: 5px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+}
+
+#order-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-top: 1vh;
+    max-width: 100%;
+}
+
+#order-container .preview {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin: 5px 0;
+}
+
+#order-container .preview > img {
+    width: 50px;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+.line {
+    width: 80%;
+    text-align: center;
+    border-top: 1px solid rgb(99, 95, 95);
+    padding: 10px 0;
+}
+
+#order #total {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: space-evenly;
+    -ms-flex-pack: space-evenly;
+    justify-content: space-evenly;
+    min-width: 200px;
+    max-width: 90vw;
+    border-top: 1px solid rgb(99, 95, 95);
+    border-bottom: 1px solid rgb(99, 95, 95);
+    margin: 5px 0;
+}
+
+.edit {
+    text-decoration: none;
+    background-color: white;
+    padding: 5px;
+    margin: 5px 0;
+    border-radius: 5px;
+}

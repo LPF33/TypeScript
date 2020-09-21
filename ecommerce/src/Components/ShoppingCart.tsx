@@ -28,11 +28,11 @@ const ShoppingCart: React.FC = () => {
 
     return (
         <div id="shopping-cart" className={show} ref={shopRef}>
-            <Link id="close" to="/">
-                X
-            </Link>
             <div id="shopping-cart-container">
                 <i className="fas fa-shopping-cart"></i>
+                <Link id="close" to="/">
+                    X
+                </Link>
                 {cart.length === 0 && <h6>No items in your shopping cart!</h6>}
                 <>
                     {cart.length > 0 &&

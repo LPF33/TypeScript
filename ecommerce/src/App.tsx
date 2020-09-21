@@ -12,8 +12,10 @@ const App: React.FC = () => {
     return (
         <BrowserRouter>
             <StateProvider>
-                <Buy />
                 <Switch>
+                    <Route exact path="/">
+                        <Buy />
+                    </Route>
                     <Route exact path="/shoppingcart">
                         <ShoppingCart />
                     </Route>
