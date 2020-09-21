@@ -30,6 +30,7 @@ In my future projects I will only use TypeScript! I have been convinced!
 -   #### About:
     Just a side project. Making a little, simple Webshop. State Mangement with React Context.
     Shop, order overview, delivery and billing address, paying method, order confirmation.
+    Responsive design.
 -   #### Preview:
     ![](webshop.gif)
 
