@@ -261,6 +261,7 @@ class Game extends Graphics {
     }
 
     pointerClick(e: MouseEvent | TouchEvent): void {
+        e.preventDefault();
         if (this.state === GameState.start) {
             this.state = GameState.play;
             this.countdown();
