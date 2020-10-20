@@ -46,6 +46,11 @@ In my future projects I will only use TypeScript! I have been convinced!
 -   Little CRUD-APP to make notes.
 -   Tech Stack: Express, React, PostgreSQL
 
+### webscraper:
+
+-   A little web scraper, to extract data from e.g. Wikipedia
+-   Tech Stack: Node, Cheerio
+
 ### little side projects:
 
 -   #### csvAnalyze : Reading with fs-Node-module a csv.file and analyze it.
